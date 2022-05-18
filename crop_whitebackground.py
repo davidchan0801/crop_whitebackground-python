@@ -1,8 +1,17 @@
 import os
 import shutil
-import sys
 import numpy as np
 from PIL import Image
+
+# Crop white background program in python
+
+# Prerequisite:
+# pip install numpy
+# pip install Pillow
+
+# Description
+# The sample project provide you an example to crop white background and save to new image.
+# Please put images in root directory.
 
 file_extension = ["jpg", "bmp", "png"]
 
@@ -46,21 +55,16 @@ def getImageSizeWithoutBlackspace(img):
           newHeight = y
   return newX, newY, newWidth+1, newHeight+1
 
-# Crop white background program in python
+if (os.path.isdir("output")):
+  shutil.rmtree("output")
+os.mkdir("output")
 
-# Prerequisite:
-# pip install numpy
-# pip install Pillow
-
-# Description
-# The sample project provide you an example to crop white background and save to new image.
-# Please put images in root directory.
-
-for root, dirss, files in os.walk(".."):
-  for filename in files:
+for entry in os.scandir('.'):
+  if entry.is_file():
+    filename = entry.name
     for ext in file_extension:
       if (filename.endswith("."+ext)):
         img = Image.open(filename)
         newX, newY, newWidth, newHeight = getImageSizeWithoutWhitespace(img)
         img = img.crop((newX,newY,newWidth,newHeight))
-        img.save(filename.split(".")[0] + "_modified." + ext)
+        img.save("output/"+filename.split(".")[0] + "." + ext)
